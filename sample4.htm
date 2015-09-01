@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Sample4</title>
+    <script src="js/react.js"></script>
+    <script src="js/JSXTransformer.js"></script>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/marked.min.js"></script>
+</head>
+<body>
+<div id="content"></div>
+<script type="text/jsx">
+    /**
+     * Commentコンポーネントの中で使用する文字列をマークダウン化する
+     * しかし、通常の方法ではエスケープするのでhtmlに変換する
+     * ※リスクが高いので気をつける必要があります
+     */
+    var CommentBox = React.createClass({
+        render: function() {
+            return (
+                    <div className="commentBox">
+                        <h1>Comments</h1>
+                        <CommentList />
+                        <CommentForm />
+                    </div>
+            );
+        }
+    });
+
+    var CommentList = React.createClass({
+        render: function() {
+            return (
+                    <div className="commentList">
+                        <Comment author="Pete Hunt">This is one comment</Comment>
+                        <Comment author="Jordan Walke">This is *another* comment</Comment>
+                    </div>
+            );
+        }
+    });
+
+    var CommentForm = React.createClass({
+        render: function() {
+            return (
+                    <div className="commentForm">
+                        Hello, world! I am a CommentForm.
+                    </div>
+            );
+        }
+    });
+
+    var Comment = React.createClass({
+        render: function() {
+            // マークダウンしたhtmlを格納
+            var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+
+            return (
+                    <div className="comment">
+                        <h2 className="commentAuthor">
+                            {this.props.author}
+                        </h2>
+                        <!-- htmlの形式のまま表示 -->
+                        <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+                    </div>
+            );
+        }
+    });
+
+    React.render(
+            <CommentBox />,
+            document.getElementById('content')
+    );
+</script>
+</body>
+</html>
